@@ -1,0 +1,40 @@
+
+
+wing {
+   panels {
+      [0] {
+         type = "linear-tapered";
+         resample = 100; // the number of points to provide on an aerofoil
+         dihedral = 0.0 deg; 
+         sections{
+            [0] {
+               aerofoil = "/home/andy/cpp/projects/aerofoil/Sections/selig/ht12.dat";
+               origin = [0.0,0.0]; 
+               chord = 60.0 mm;
+               position = [0.0 mm, 0.0 mm,0.0 mm]; // position of aerofoil origin on x, y, z axes
+               incidence = 0.0 deg;
+               te_thickness = 0.8 mm;
+            }
+            [1] {
+               aerofoil = "/home/andy/cpp/projects/aerofoil/Sections/selig/ht12.dat";
+               origin = [0.0,0.0];
+               chord = 40.0 mm;
+               position = [12.0 mm, 100.0 mm, 0.0 mm];
+               incidence = 0.0 deg; //  positive angle lowers le
+               te_thickness = 0.8 mm;
+            }
+         }
+          tip { // optional tip
+            type = "le-bezier,te-bezier"; // could also do "le-bezier,te-straight", which would give a straight te following the panel .. TODO
+            position = [50.0 mm,125.0 mm, 0.0 mm]; // The very tip
+            te_thickness = 0.8 mm;
+            incidence = 0.0 deg;
+            le_bezier_p1_y_percent = 0.7;
+            le_bezier_p2_x_percent = 0.7;
+            te_bezier_p1_y_percent = 0.9;
+            te_bezier_p2_x_percent = 0.9;
+            aerofoil = "/home/andy/cpp/projects/aerofoil/Sections/selig/ht12.dat";
+         }
+      }
+   }
+}

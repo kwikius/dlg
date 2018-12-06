@@ -1,0 +1,40 @@
+
+
+wing {
+   panels {
+      [0] {
+         type = "linear-tapered"; // linear tapered panel consisting of two sections
+         resample = 200; // the number of points to provide around the inner and outer aerofoils
+         dihedral = 0 deg; // trying to get it to sit flat on the board
+         sections{
+            [0] { // rename to "inner" ?
+               aerofoil = "/home/andy/cpp/projects/aerofoil/Sections/selig/ag18.dat";
+               incidence = 0.0 deg;  //want to try to get it to sit flat on the board
+               origin = [0.0,0.0]; // origin of airfoil relative to Le point
+               chord = 150.0 mm;
+               position = [0.0 mm, 0.0 mm, 0.0 mm]; // position of aerofoil origin on x, y, z axes
+               te_thickness = 0.0 mm; //add a finite trailing edge thickness
+            }
+            [1] { // rename to outer ?
+               aerofoil = "/home/andy/cpp/projects/aerofoil/Sections/selig/ag19.dat";
+               origin = [0.0,0.0];
+               chord = 100.0 mm;
+               position = [30.0 mm, 375.0 mm, 0.0 mm];
+               incidence = -0.1 deg; // want to try to get it to sit flat on the board
+               te_thickness = 0.0 mm;
+            }
+         }
+         tip { // optional tip
+            type = "le-bezier,te-bezier"; // could also do "le-bezier,te-straight", which would give a straight te following the panel .. TODO
+            position = [120.0 mm,450.0 mm, 1.0 mm]; // The very tip
+            te_thickness = 0.0 mm;
+            incidence = -0.1 deg;
+            le_bezier_p1_y_percent = 0.85;
+            le_bezier_p2_x_percent = 0.55;// between 0 and 1
+            te_bezier_p1_y_percent = 0.55;
+            te_bezier_p2_x_percent = 0.55;
+            aerofoil = "/home/andy/cpp/projects/aerofoil/Sections/selig/ag19.dat";
+         }
+      }
+   }
+}
