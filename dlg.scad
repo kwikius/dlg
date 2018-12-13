@@ -28,6 +28,10 @@ tail_incidence = 1;
 
 tail_length = 350;
 
+// true to show wing construction
+// false to just show wing shape
+show_construction = false;
+
 module fuselage_pod()
 {
    difference(){
@@ -56,7 +60,11 @@ module wing(){
 
       rotate([-polyhedral_angle0,0,0]){
          rotate([0,0,180]){
-           import("dlg_wing_construction.stl", convexity = 10);
+           if ( show_construction){
+              import("dlg_wing_construction.stl", convexity = 10);
+            }else{
+               import("wing.stl", convexity = 10);
+            }
          }
 
       }

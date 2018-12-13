@@ -13,7 +13,7 @@ panel_halfspan =450;
 
 // y pos of centre, thickness of rib, angle rel straight fore and aft
 rib_list = [
-[ 3.01,6,0],
+[ 3.0,6,0],
 [ 25,3,0],
 [ 60,1.6,0],
 [ 100,1.6,0],
@@ -27,7 +27,7 @@ rib_list = [
 
 module panel0()
 {
-   import("panel_uc.stl", convexity = 10);
+   import("wing.stl", convexity = 10);
 }
 
 
