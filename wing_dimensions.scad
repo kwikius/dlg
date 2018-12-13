@@ -6,6 +6,8 @@ panel_straight_halfspan = 375;
 panel_chord = [150,100];
 panel_offset = [0,30];
 rib_cap_width = 6;
+spar_pos_pc = [0.25, 0.22];
+spar_width = [ 6,3];
 
 // y pos of centre, thickness of rib, angle rel straight fore and aft
 rib_list = [
