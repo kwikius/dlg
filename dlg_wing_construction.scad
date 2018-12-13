@@ -1,29 +1,5 @@
 
-//include <wing_utils.scad>
-
-//panel_dihedral = [1.35,9,12];
-
-panel_halfspan =450;
-
-// outer chord is at straight_half_span {
-   panel_straight_halfspan = 375;
-   panel_chord = [150,100];
-   panel_offset = [0,30];
-//}
-
-// y pos of centre, thickness of rib, angle rel straight fore and aft
-rib_list = [
-[ 3.0,6,0],
-[ 25,3,0],
-[ 60,1.6,0],
-[ 100,1.6,0],
-[ 150,1.6,0],
-[ 200,1.6,0],
-[ 250,1.6,0],
-[ 300,1.6,0],
-[ 350,1.6,0],
-[ 400,1.6,0]
-];
+include <wing_dimensions.scad>
 
 module panel0()
 {
@@ -93,25 +69,25 @@ module rib_blanks()
 
 module upper_rib_cap_blanks()
 {
-   cap_width = 6;
+   
    for ( i = [0:len(rib_list)-1]){
       pos = rib_list[i][0];
       //rib_thickness = rib_list[i][1];
       
       // ignore angle for now
-      translate( [40,pos-cap_width/2,-10]){
-         cube([120,cap_width,25]);
+      translate( [40,pos-rib_cap_width/2,-10]){
+         cube([120,rib_cap_width,25]);
       }
    }
 }
 
 module lower_rib_cap_blanks()
 {
-   cap_width = 6;
+   //rib_cap_width = 6;
    for ( i = [0:len(rib_list)-1]){
       pos = rib_list[i][0];
-      translate( [40,pos-cap_width/2,-10]){
-         cube([120,cap_width,25]);
+      translate( [40,pos-rib_cap_width/2,-10]){
+         cube([120,rib_cap_width,25]);
       }
    }
 }
