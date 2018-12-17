@@ -11,7 +11,11 @@ show_wing_upper_le_sheeting = 7;
 show_wing_lower_le_sheeting = 8;
 show_wing_spar = 9;
 show_leading_edge_blank = 10;
-show_mode = -1;
+show_ribs_output = 11;
+show_jig_moulds_output = 12;
+show_wing_jig = 13;
+
+show_mode = show_wing_jig;
 
 module panel0()
 {
@@ -46,12 +50,6 @@ module wing_jig_shape(){
       translate([-0.01,0,0]){
          jig_leading_edge_blank();
       }
-//      union(){
-//         leading_edge_blank();
-//         translate([-2,0,0]){
-//            leading_edge_blank();
-//         }
-//      }
    }
 }
 
@@ -72,6 +70,51 @@ module wing_jig_blanks()
    }
 }
 
+module wing_jig_mould_blank(i){
+   thickness = 3;
+   list = concat(rib_list,jig_rib_list);
+   pos = list[i][0];
+   angle = list[i][2];
+   offset = panel_offset[0] + (panel_offset[1] - panel_offset[0]) * pos / panel_halfspan;
+   chord = (panel_chord[0] - (panel_chord[0] -panel_chord[1]) * pos / panel_halfspan) / cos(angle);
+   translate( [offset,pos-thickness/2,-30]){
+      rotate([0,0,angle]){
+         cube([chord,thickness,35]);
+      }
+   }
+}
+
+
+module wing_jig_mould(i){
+   list = concat(rib_list,jig_rib_list);
+   pos = list[i][0];
+   rotate([-90,0,0]){
+      translate([0,-pos,0]){
+         intersection(){
+            wing_jig_mould_blank(i);
+            difference(){
+               wing_jig_shape();
+               translate([0,-1,-25]){
+                  cube([200,500,20]);
+               }
+            }
+         }
+      }
+   }
+}
+
+module wing_jig_moulds_output(){
+  list1 = concat(rib_list,jig_rib_list);
+   rib_spacing = 15;
+   for ( i = [0:len(list1)-1]){
+      translate([0,i *rib_spacing, 0]){
+         projection(){
+            wing_jig_mould(i);
+         }
+      }
+   }
+}
+
 module jig_leading_edge_blank(){
    translate([0,0,-3]){
       linear_extrude(height = 8){
@@ -84,6 +127,19 @@ module jig_leading_edge_blank(){
       }
    }
 }
+
+module wing_jig(){
+   intersection(){
+      wing_jig_blanks();
+      difference(){
+         wing_jig_shape();
+         translate([0,-1,-25]){
+            cube([200,500,20]);
+         }
+      }
+   }
+}
+
 
 module leading_edge_blank(){
    translate([0,0,-3]){
@@ -156,11 +212,13 @@ module wing_spar()
 
 module rib_blanks()
 {
+   list = concat(rib_list,wing_rib_list);
    difference(){
-      for ( i = [0:len(rib_list)-1]){
-         pos = rib_list[i][0];
-         rib_thickness = rib_list[i][1];
-         angle = rib_list[i][2];
+      
+      for ( i = [0:len(list)-1]){
+         pos = list[i][0];
+         rib_thickness = list[i][1];
+         angle = list[i][2];
          offset = panel_offset[0] + (panel_offset[1] - panel_offset[0]) * pos / panel_halfspan;
          chord = (panel_chord[0] - (panel_chord[0] -panel_chord[1]) * pos / panel_halfspan) / cos(angle);
          translate( [offset,pos-rib_thickness/2,-7]){
@@ -177,18 +235,62 @@ module rib_blanks()
    }
 }
 
-module rib_cap_blanks()
+module rib_blank(i){
+   list = concat(rib_list,wing_rib_list);
+   pos = list[i][0];
+   rib_thickness = list[i][1];
+   angle = list[i][2];
+   offset = panel_offset[0] + (panel_offset[1] - panel_offset[0]) * pos / panel_halfspan;
+   chord = (panel_chord[0] - (panel_chord[0] -panel_chord[1]) * pos / panel_halfspan) / cos(angle);
+   difference(){
+         translate( [offset,pos-rib_thickness/2,-7]){
+            rotate([0,0,angle]){
+               cube([chord,rib_thickness,20]);
+            }
+         }
+     // }
+      union(){
+         wing_spar_blank();
+         te_blank();
+         leading_edge_blank();
+      }
+   }
+}
+
+
+module wing_rib_section(i)
 {
-   for ( i = [0:len(rib_list)-1]){
-      pos = rib_list[i][0];
-      angle = rib_list[i][2];
-      offset = panel_offset[0] + (panel_offset[1] - panel_offset[0]) * pos / panel_halfspan;
-      chord = (panel_chord[0] - (panel_chord[0] -panel_chord[1]) * pos / panel_halfspan)/cos(angle);
-      translate( [offset,pos-rib_cap_width/2,-7]){
-         rotate([0,0,angle]){
-            cube([chord,rib_cap_width,20]);
+   list = concat(rib_list,wing_rib_list);
+   pos = list[i][0];
+   rib_thickness = list[i][1];
+   angle = list[i][2];
+   offset = panel_offset[0] + (panel_offset[1] - panel_offset[0]) * pos / panel_halfspan;
+   chord = (panel_chord[0] - (panel_chord[0] -panel_chord[1]) * pos / panel_halfspan) / cos(angle);
+
+   rotate([-90,0,0]){
+      translate( [-offset,-(pos),0]){
+        wing_rib(i);
+      }
+   }
+}
+
+module ribs_output(){
+   list1 = concat(rib_list,wing_rib_list);
+   rib_spacing = 15;
+   for ( i = [0:len(list1)-1]){
+      translate([0,i *rib_spacing, 0]){
+         projection(){
+            wing_rib_section(i);
          }
       }
+   }
+}
+
+module wing_rib(i)
+{
+   intersection(){
+       rib_blank(i);
+       wing_unskinned0_8();
    }
 }
 
@@ -196,6 +298,22 @@ module wing_ribs(){
    intersection(){
        rib_blanks();
        wing_unskinned0_8();
+   }
+}
+
+module rib_cap_blanks()
+{
+    list = concat(rib_list,wing_rib_list);
+   for ( i = [0:len(list)-1]){
+      pos = list[i][0];
+      angle = list[i][2];
+      offset = panel_offset[0] + (panel_offset[1] - panel_offset[0]) * pos / panel_halfspan;
+      chord = (panel_chord[0] - (panel_chord[0] -panel_chord[1]) * pos / panel_halfspan)/cos(angle);
+      translate( [offset,pos-rib_cap_width/2,-7]){
+         rotate([0,0,angle]){
+            cube([chord,rib_cap_width,20]);
+         }
+      }
    }
 }
 
@@ -383,6 +501,7 @@ if ( show_mode == show_plan_and_rib_blanks){
       leading_edge();
       trailing_edge();
       le_sheeting();
+       wing_spar();
   }else {
       if ( show_mode == show_wing_ribs){
          wing_ribs();
@@ -412,6 +531,18 @@ if ( show_mode == show_plan_and_rib_blanks){
                         }else{
                            if(show_mode == show_leading_edge_blank){
                               leading_edge_blank();
+                           }else{
+                              if(show_mode == show_ribs_output){
+                                 ribs_output();
+                              }else{
+                                 if(show_mode == show_jig_moulds_output){
+                                    wing_jig_moulds_output();
+                                 }else{
+                                    if (show_mode == show_wing_jig){
+                                       wing_jig();
+                                    }
+                                 }
+                              }
                            }
                         }
                      }
@@ -422,21 +553,26 @@ if ( show_mode == show_plan_and_rib_blanks){
       }
    }
 }
-
-intersection(){
-   wing_jig_blanks();
-   difference(){
-      wing_jig_shape();
-      translate([0,-1,-25]){
-         cube([200,500,20]);
-      }
-   }
-}
+//wing_jig_mould(0);
 
 
+//    //  wing_spar();
+//      lower_rib_caps();
+//     // upper_rib_caps();
+//     // wing_ribs();
+//      leading_edge();
+//      trailing_edge();
+//      lower_le_sheeting();
 
-
-
+//intersection(){
+//   wing_jig_blanks();
+//   difference(){
+//      wing_jig_shape();
+//      translate([0,-1,-25]){
+//         cube([200,500,20]);
+//      }
+//   }
+//}
 
 
 
