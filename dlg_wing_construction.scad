@@ -146,6 +146,10 @@ module wing_jig(){
 module wing_jig_moulds_plan_output(){
    projection(){
       wing_jig();
+      translate([0,0,-50]){
+         trailing_edge();
+         leading_edge();
+      }
    }
 }
 
