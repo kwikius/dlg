@@ -14,8 +14,9 @@ show_leading_edge_blank = 10;
 show_ribs_output = 11;
 show_jig_moulds_output = 12;
 show_wing_jig = 13;
+show_wing_jig_plan = 14;
 
-show_mode = show_wing_jig;
+show_mode = show_wing_jig_plan;
 
 module panel0()
 {
@@ -103,6 +104,8 @@ module wing_jig_mould(i){
    }
 }
 
+
+
 module wing_jig_moulds_output(){
   list1 = concat(rib_list,jig_rib_list);
    rib_spacing = 15;
@@ -137,6 +140,12 @@ module wing_jig(){
             cube([200,500,20]);
          }
       }
+   }
+}
+
+module wing_jig_moulds_plan_output(){
+   projection(){
+      wing_jig();
    }
 }
 
@@ -540,6 +549,11 @@ if ( show_mode == show_plan_and_rib_blanks){
                                  }else{
                                     if (show_mode == show_wing_jig){
                                        wing_jig();
+                                    }else{
+                                       if(show_mode == show_wing_jig_plan){
+                                          //wing_jig_plan();
+                                          wing_jig_moulds_plan_output();
+                                       }
                                     }
                                  }
                               }
