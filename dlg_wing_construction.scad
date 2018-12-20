@@ -16,7 +16,7 @@ show_jig_moulds_output = 12;
 show_wing_jig = 13;
 show_wing_jig_plan = 14;
 
-show_mode = show_wing_jig_plan;
+show_mode = -1;
 
 module panel0()
 {
@@ -84,7 +84,6 @@ module wing_jig_mould_blank(i){
       }
    }
 }
-
 
 module wing_jig_mould(i){
    list = concat(rib_list,jig_rib_list);
@@ -571,7 +570,13 @@ if ( show_mode == show_plan_and_rib_blanks){
       }
    }
 }
-//wing_jig_mould(0);
+
+difference(){
+offset( r=0.25){
+ribs_output();
+}
+ribs_output();
+}
 
 
 //    //  wing_spar();

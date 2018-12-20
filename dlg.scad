@@ -31,6 +31,21 @@ tail_length = 350;
 // true to show wing construction
 // false to just show wing shape
 show_construction = true;
+module forward_mark()
+{
+
+   rotate([0,90,0]){
+      cylinder (d1 = 1, d2 = 10, h= 10);
+   }
+}
+module rear_mark()
+{
+   translate([-10,0,0]){
+      rotate([0,90,0]){
+         cylinder (d1 = 10, d2 = 1, h= 10);
+      }
+   }
+}
 
 module fuselage_pod()
 {
@@ -158,16 +173,50 @@ module joiner()
 
 }
 
+module rcrx()
+{
+color([.3,0.2,0.3]){
+	cube([40,22.5,6],center = true);
+}
+}
+
+module servo( hornside = false)
+{
+   horn_len = hornside?7:-7;
+   color([.3,0.2,0.3]){
+      translate([-9,-4,-7.5]){
+         cube([18,8,15]);
+         translate([-4,0,10]){
+           cube([26,8,1]);
+         }
+         translate([4,4,0]){
+           cylinder(r=4, h= 16.8);
+           translate([0,0,16.9]){
+            cylinder(r= 1.5, h = 2.5);
+           }
+           hull(){
+               translate([0,-horn_len,18]){
+               cylinder (r = 1, h=1);
+               }
+               translate([0,horn_len,18]){
+               cylinder (r = 1, h=1);
+               }
+           }
+         }
+      }
+   }
+}
+
 wing_color = [0.7,0.6,1];
 fuse_color = [1,0.6,1];
 
 module whole_plane() {
    translate([80,0,0]){
-      color(fuse_color){
-         translate([-30,0,-10]){
-            fuselage_pod();
+     // color(fuse_color){
+         translate([-0,0,-10]){
+            %fuselage_pod();
          }
-      }
+     // }
     //  joiner();
       translate([0,0,2]){
          color(wing_color){
@@ -184,8 +233,45 @@ module whole_plane() {
       }
    }
 }
+module battery()
+{
+   translate ([150,-5,-20]){
+      cube([40,10,20]);
+   }
+}
 
+battery();
+
+translate([50,0,-15]){
+
+  servo(false);
+
+}
+
+translate([80,0,-12]){
+ rotate([180,0,0]){
+     servo(true);
+  }
+}
+
+translate([120,0,-10]){
+  rotate([90,0,0]){
+     rcrx();
+  }
+}
+
+translate([-10,0,0]){
 whole_plane();
+}
+
+translate([0,0,20]){
+   translate([0,0,0]){
+      forward_mark();
+   } 
+   translate([-450,0,0]){
+      rear_mark();
+   }
+}
 
 
 
