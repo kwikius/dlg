@@ -264,13 +264,15 @@ translate([-10,0,0]){
 whole_plane();
 }
 
-translate([0,0,20]){
-   translate([0,0,0]){
+color("red"){
+translate([0,0,10]){
+   translate([170,0,0]){
       forward_mark();
    } 
-   translate([-450,0,0]){
+   translate([0,0,0]){
       rear_mark();
    }
+}
 }
 
 
