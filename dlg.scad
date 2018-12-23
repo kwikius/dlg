@@ -30,7 +30,7 @@ tail_length = 350;
 
 // true to show wing construction
 // false to just show wing shape
-show_construction = false;
+show_construction = true;
 module forward_mark()
 {
 
