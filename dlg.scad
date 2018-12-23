@@ -18,11 +18,11 @@ Copyright (C) 2017 Andy Little
  along with this program. If not, see http://www.gnu.org/licenses./
 */
 
-
+use <tail_mount.scad>
 fuselage_width_ratio = 0.4;
 fuselage_height_ratio = 0.65;
 
-
+show_measurement = false;
 wing_incidence = 2.5;
 tail_incidence = 1;
 
@@ -30,7 +30,7 @@ tail_length = 350;
 
 // true to show wing construction
 // false to just show wing shape
-show_construction = true;
+show_construction = false;
 module forward_mark()
 {
 
@@ -73,9 +73,9 @@ module fuselage_pod()
 //         sphere(d = 50, $fn = 50);
 //      }
       translate([-30,0,0]){
-         scale ( [1,fuselage_width_ratio,fuselage_height_ratio]){
+         scale ( [1,1,1]){
             rotate([0,-90,0]){
-               cylinder( r1=4,r2= 4, h = tail_length+85, $fn = 50);
+               cylinder( r1=2,r2= 2, h = tail_length+105, $fn = 50);
             }
          }
       }
@@ -142,14 +142,14 @@ module tailplane()
 
 module tail()
 {
-   translate([-(tail_length+55),0,-25]){
+   translate([-(tail_length+54),0,-19.5]){
       rotate([0,-tail_incidence,0]){
          rotate([0,0,180]){
             tailplane();
          }
       }
    }
- translate([-(tail_length+59),0,-6.5]){
+ translate([-(tail_length+59),0,-9.5]){
          rotate([0,0,180]){
               fin();
          }
@@ -212,11 +212,11 @@ fuse_color = [1,0.6,1];
 
 module whole_plane() {
    translate([80,0,0]){
-     // color(fuse_color){
+      color(fuse_color){
          translate([-0,0,-10]){
-            %fuselage_pod();
+            fuselage_pod();
          }
-     // }
+     }
     //  joiner();
       translate([0,0,2]){
          color(wing_color){
@@ -230,6 +230,13 @@ module whole_plane() {
       }
       color(wing_color){
          tail();
+      }
+   }
+   color(fuse_color){
+      translate([-(tail_length),0,-10]){
+         rotate([180,0,0]){
+            tail_mount();
+         }
       }
    }
 }
@@ -263,7 +270,7 @@ translate([120,0,-10]){
 translate([-10,0,0]){
 whole_plane();
 }
-
+if (show_measurement){
 color("red"){
 translate([0,0,10]){
    translate([170,0,0]){
@@ -274,6 +281,9 @@ translate([0,0,10]){
    }
 }
 }
+}
+
+
 
 
 
