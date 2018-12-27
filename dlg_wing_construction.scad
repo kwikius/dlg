@@ -16,7 +16,7 @@ show_jig_moulds_output = 12;
 show_wing_jig = 13;
 show_wing_jig_plan = 14;
 
-show_mode = -1;
+show_mode = show_whole_construction;
 
 module panel0()
 {
@@ -571,31 +571,6 @@ if ( show_mode == show_plan_and_rib_blanks){
    }
 }
 
-difference(){
-offset( r=0.25){
-ribs_output();
-}
-ribs_output();
-}
-
-
-//    //  wing_spar();
-//      lower_rib_caps();
-//     // upper_rib_caps();
-//     // wing_ribs();
-//      leading_edge();
-//      trailing_edge();
-//      lower_le_sheeting();
-
-//intersection(){
-//   wing_jig_blanks();
-//   difference(){
-//      wing_jig_shape();
-//      translate([0,-1,-25]){
-//         cube([200,500,20]);
-//      }
-//   }
-//}
 
 
 

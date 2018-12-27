@@ -18,6 +18,7 @@ Copyright (C) 2017 Andy Little
  along with this program. If not, see http://www.gnu.org/licenses./
 */
 
+//use <tail_mount_v2.scad>
 use <tail_mount.scad>
 fuselage_width_ratio = 0.4;
 fuselage_height_ratio = 0.65;
@@ -142,7 +143,7 @@ module tailplane()
 
 module tail()
 {
-   translate([-(tail_length+54),0,-19.5]){
+   translate([-(tail_length+54),0,-25.5]){
       rotate([0,-tail_incidence,0]){
          rotate([0,0,180]){
             tailplane();
@@ -209,6 +210,7 @@ module servo( hornside = false)
 
 wing_color = [0.7,0.6,1];
 fuse_color = [1,0.6,1];
+tail_mount_color = [0.3,0.6,1];
 
 module whole_plane() {
    translate([80,0,0]){
@@ -232,7 +234,7 @@ module whole_plane() {
          tail();
       }
    }
-   color(fuse_color){
+   color(tail_mount_color){
       translate([-(tail_length),0,-10]){
          rotate([180,0,0]){
             tail_mount();
